@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from crud.user_crud import user_crud
-from schema.user_schema import UserRegister
+from schema.user_schema import UserRegister, UserLogin
+from service.user_service import user_service
 
 router = APIRouter()
 
@@ -23,5 +24,29 @@ def register(register_info: UserRegister):
 
     return
 
+
+@router.post('/login', tags=['用户管理'])
+def login(login_info: UserLogin):
+    """
+        用户登录
+    :param login_info:
+    :return:
+    """
+    from datetime import timedelta
+    access_token_expires = timedelta(minutes=30)
+
+    password = login_info.password
+    hashed_password = user_service.get_password_hash(password)
+
+    if user_service.verify_password(password, hashed_password):
+        access_token = user_service.create_access_token(
+            data={"sub": login_info.username}, expires_delta=access_token_expires
+        )
+        return access_token
+
+
+@router.post('/me/{token}', tags=['用户管理'])
+def test_jwt_token(token: str):
+    return user_service.get_current_user(token)
 
 

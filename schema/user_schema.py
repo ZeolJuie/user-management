@@ -37,3 +37,9 @@ class UserRegister(BaseModel):
             raise HTTPException(status_code=422, detail='email is already exists')
         return value
 
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
