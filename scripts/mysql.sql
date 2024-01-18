@@ -1,0 +1,5 @@
+CREATE TABLE user(
+    id int NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT 'Primary Key',
+    name VARCHAR(128) NOT NULL COMMENT '用户名',
+    email VARCHAR(128) NOT NULL COMMENT '用户邮箱'
+) COMMENT '用户表';

@@ -31,6 +31,16 @@ class UserCrud:
         else:
             return result
 
+    def add_user(self, user: User):
+        try:
+            result = self._session.add(user)
+            self._session.commit()
+            self._session.close()
+        except Exception as e:
+            logger.warning(e)
+        else:
+            return result
+
 
 user_crud = UserCrud()
 

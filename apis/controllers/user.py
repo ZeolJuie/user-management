@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from crud.user_crud import user_crud
+from models.user_model import User
 from schema.user_schema import UserRegister
 
 router = APIRouter()
@@ -19,9 +20,13 @@ def register(register_info: UserRegister):
     :param register_info: 用户注册信息
     :return:
     """
-    email = register_info.email
+    # TODO 在service层完整user实例的构造
+    user = User()
+    user.name = register_info.username
+    user.email = register_info.email
 
-    return
+    # TODO 返回http状态
+    return user_crud.add_user(user)
 
 
 

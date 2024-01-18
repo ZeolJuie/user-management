@@ -37,3 +37,15 @@ class UserRegister(BaseModel):
             raise HTTPException(status_code=422, detail='email is already exists')
         return value
 
+    @field_validator('password')
+    def password_length_validator(cls, value):
+        """
+            校验密码的长度大于6位
+        :param value:
+        :return value:
+        """
+
+        if len(value) < 6:
+            raise HTTPException(status_code=422, detail='password length should greater than 6 characters')
+        return value
+
