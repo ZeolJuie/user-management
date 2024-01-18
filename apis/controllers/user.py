@@ -35,17 +35,13 @@ def login(login_info: UserLogin):
     :param login_info:
     :return:
     """
-    from datetime import timedelta
-    access_token_expires = timedelta(minutes=30)
-
     password = login_info.password
-    hashed_password = user_service.get_password_hash(password)
+    username = login_info.username
 
-    if user_service.verify_password(password, hashed_password):
-        access_token = user_service.create_access_token(
-            data={"sub": login_info.username}, expires_delta=access_token_expires
-        )
-        return access_token
+    accesstoken = user_service.user_login(username, password)
+    if not accesstoken:
+        return HTTPException(status_code=401, detail="Login failed")
+    return accesstoken
 
 
 @router.post('/token', tags=['用户管理'])

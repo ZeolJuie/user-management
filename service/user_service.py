@@ -5,6 +5,8 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 from loguru import logger
 
+from crud.user_crud import user_crud
+
 
 class UserService:
 
@@ -12,11 +14,28 @@ class UserService:
     _ALGORITHM = "HS256"
     _SECRET_KEY = "c1790b4032161aea9f42f86fee247c198842ea568ee659a34c18222b50810ac8"
 
+    @staticmethod
+    def user_login(username, password):
+        from datetime import timedelta
+        access_token_expires = timedelta(minutes=30)
+
+        hashed_password = user_service.get_user_password(username=username)
+
+        if user_service.verify_password(password, hashed_password):
+            access_token = user_service.create_access_token(
+                data={"sub": username}, expires_delta=access_token_expires
+            )
+            return access_token
+
     def get_password_hash(self, password):
         """
         把密码转为hash密码
         """
         return self._pwd_context.hash(password)
+
+    @staticmethod
+    def get_user_password(username):
+        return user_crud.get_user_by_username(username)
 
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         """
@@ -25,7 +44,6 @@ class UserService:
         :param hashed_password: hash密码
         :return:
         """
-        hashed_password = "$2b$12$NHp/hqXVuLrMSby0Z88xU.4iwbs6JNEAXIFC9hqGNfAz7gqKu3H0q"
         return self._pwd_context.verify(plain_password, hashed_password)
 
     def create_access_token(self, data: dict, expires_delta: Union[timedelta, None] = None) -> str:
