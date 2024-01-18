@@ -1,5 +1,9 @@
 # user-management
 
+python版本
+- python3.9
+
+
 启动命令
 
 ```python

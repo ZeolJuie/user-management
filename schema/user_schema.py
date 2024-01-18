@@ -49,3 +49,9 @@ class UserRegister(BaseModel):
             raise HTTPException(status_code=422, detail='password length should greater than 6 characters')
         return value
 
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+

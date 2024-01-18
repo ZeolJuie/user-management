@@ -9,5 +9,5 @@ class User(ModelBase):
 
     name = Column(String(length=128), comment='用户名')
     email = Column(String(length=128), comment='用户邮箱')
-    # password = Column(String(length=128), comment='用户密码')
+    password = Column(String(length=128), comment='用户密码')
 

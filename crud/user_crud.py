@@ -31,6 +31,17 @@ class UserCrud:
         else:
             return result
 
+    # TODO 将几个接口合并成get_user_by_condition
+    def get_user_by_username(self, username):
+        try:
+            result = self._session.query(User.password).filter_by(name=username).all()
+            self._session.commit()
+            self._session.close()
+        except Exception as e:
+            logger.warning(e)
+        else:
+            return result[0][0]
+
     def add_user(self, user: User):
         try:
             result = self._session.add(user)
