@@ -53,11 +53,12 @@ class UserService:
         """
         try:
             payload = jwt.decode(token, self._SECRET_KEY, algorithms=[self._ALGORITHM])
-            print(payload)  # {'sub': 'johndoe', 'exp': 1674033230}
-
+            # payload = {'sub': 'username', 'exp': 1674033230}
             username: str = payload.get("sub")
+
+            # 在数据库中查询username
             if username is None:
-                print("username 不存在")
+                return None
 
             user = {
                 'username': username,

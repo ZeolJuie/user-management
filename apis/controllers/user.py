@@ -1,9 +1,12 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi.security import OAuth2PasswordBearer
+
 from crud.user_crud import user_crud
 from schema.user_schema import UserRegister, UserLogin
 from service.user_service import user_service
 
 router = APIRouter()
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
 @router.get('/', tags=['用户管理'])
@@ -45,8 +48,13 @@ def login(login_info: UserLogin):
         return access_token
 
 
-@router.post('/me/{token}', tags=['用户管理'])
-def test_jwt_token(token: str):
-    return user_service.get_current_user(token)
+@router.post('/token', tags=['用户管理'])
+def test_jwt_token(token: str = Depends(oauth2_scheme)):
+    print(token)
+    user = user_service.get_current_user(token=token)
+    if not user:
+        return HTTPException(status_code=401, detail="Authoritarian failed")
+    return user
+
 
 
